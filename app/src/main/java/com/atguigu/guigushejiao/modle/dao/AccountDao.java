@@ -61,7 +61,6 @@ public class AccountDao  {
             userInfo.setPhoto(cursor.getString(cursor.getColumnIndex(AccountTable.COL_USER_PHOTO)));
             userInfo.setUsername(cursor.getString(cursor.getColumnIndex(AccountTable.COL_USER_NAME)));
         }
-
         //关闭游标
         cursor.close();
 
