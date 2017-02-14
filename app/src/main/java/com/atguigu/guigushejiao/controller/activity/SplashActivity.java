@@ -32,7 +32,7 @@ public class SplashActivity extends AppCompatActivity {
                 boolean loggedInBefore = EMClient.getInstance().isLoggedInBefore();
                 if(loggedInBefore){
                     //登录成功后需要处理
-                    //Modle.getInstance().login
+                    Modle.getInstance().loginSuccess(EMClient.getInstance().getCurrentUser());
                     //录过
                     Intent intent = new Intent(SplashActivity.this, MainActivity.class);
                     startActivity(intent);

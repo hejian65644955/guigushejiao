@@ -11,6 +11,7 @@ import android.widget.EditText;
 import com.atguigu.guigushejiao.MainActivity;
 import com.atguigu.guigushejiao.R;
 import com.atguigu.guigushejiao.modle.Modle;
+import com.atguigu.guigushejiao.modle.bean.UserInfo;
 import com.atguigu.guigushejiao.utils.ShowToast;
 import com.hyphenate.EMCallBack;
 import com.hyphenate.chat.EMClient;
@@ -71,6 +72,11 @@ public class LoginActivity extends AppCompatActivity {
                                 @Override
                                 public void onSuccess() {
                                     //登录成功后需要处理
+                                    Modle.getInstance().loginSuccess(EMClient.getInstance().getCurrentUser());
+                                    //将用户保存的数据库
+                                    Modle.getInstance().getAccountDao()
+                                            .addAccount(new UserInfo(EMClient.getInstance().getCurrentUser()));
+
                                     //跳转
                                     Intent intent = new Intent(LoginActivity.this, MainActivity.class);
                                     startActivity(intent);
