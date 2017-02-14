@@ -2,6 +2,7 @@ package com.atguigu.guigushejiao;
 
 import android.app.Application;
 
+import com.atguigu.guigushejiao.modle.Modle;
 import com.hyphenate.chat.EMOptions;
 import com.hyphenate.easeui.controller.EaseUI;
 
@@ -19,7 +20,7 @@ public class ImApplication extends Application{
         initHXSdk();
 
         //初始化Modle
-        //Modle.getInstance().init(this);
+        Modle.getInstance().init(this);
     }
 
     private void initHXSdk() {
