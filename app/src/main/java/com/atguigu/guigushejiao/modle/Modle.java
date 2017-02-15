@@ -3,6 +3,7 @@ package com.atguigu.guigushejiao.modle;
 import android.content.Context;
 
 import com.atguigu.guigushejiao.modle.dao.AccountDao;
+import com.atguigu.guigushejiao.modle.db.DBManger;
 
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
@@ -14,7 +15,8 @@ import java.util.concurrent.Executors;
 public class Modle {
 
     private static  Modle modle =new Modle();
-    AccountDao accountDao;
+    private AccountDao accountDao;
+    private DBManger dbManger;
 
     private Modle(){};
 
@@ -38,6 +40,11 @@ public class Modle {
     }
 
     public void loginSuccess(String currentUser) {
+        if(dbManger!=null){
+            dbManger.close();
+        }
+
+        dbManger = new DBManger(context,currentUser+".db");
 
     }
 
