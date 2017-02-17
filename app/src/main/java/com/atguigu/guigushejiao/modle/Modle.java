@@ -4,6 +4,7 @@ import android.content.Context;
 
 import com.atguigu.guigushejiao.modle.dao.AccountDao;
 import com.atguigu.guigushejiao.modle.db.DBManger;
+import com.atguigu.guigushejiao.utils.SpUtils;
 
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
@@ -56,5 +57,9 @@ public class Modle {
 
     public DBManger getDbManger(){
         return dbManger;
+    }
+
+    public void exitLogin() {
+        SpUtils.getInstance().destory();
     }
 }

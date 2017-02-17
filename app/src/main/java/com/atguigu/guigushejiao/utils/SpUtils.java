@@ -4,6 +4,7 @@ import android.content.Context;
 import android.content.SharedPreferences;
 
 import com.atguigu.guigushejiao.ImApplication;
+import com.hyphenate.chat.EMClient;
 
 /**
  * Created by Administrator on 2016/9/24.
@@ -24,7 +25,8 @@ public class SpUtils {
 
 //        context.getSharedPreferences()
         if (mSp == null) {
-            mSp = ImApplication.getGlobalApplication().getSharedPreferences("im", Context.MODE_PRIVATE);
+            mSp = ImApplication.getGlobalApplication().
+                    getSharedPreferences(EMClient.getInstance().getCurrentUser(), Context.MODE_PRIVATE);
         }
 
         return instance;
@@ -57,5 +59,9 @@ public class SpUtils {
     // 获取int类型数据
     public int getInt(String key, int defValue) {
         return mSp.getInt(key, defValue);
+    }
+
+    public void destory() {
+        mSp =null;
     }
 }

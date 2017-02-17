@@ -28,6 +28,7 @@ public class InviteMessageAdapter extends BaseAdapter {
     private List<InvitationInfo> invitationInfos;
 
     public void refresh(List<InvitationInfo> invitationInfos) {
+
         //校验
         if (invitationInfos == null) {
             return;
@@ -39,7 +40,8 @@ public class InviteMessageAdapter extends BaseAdapter {
         notifyDataSetChanged();
     }
 
-    public InviteMessageAdapter(Context context) {
+    public InviteMessageAdapter(Context context,OnInviteChangeListener onInviteChangeListener) {
+        this.onInviteChangeListener =onInviteChangeListener;
         this.mContext = context;
         invitationInfos = new ArrayList<>();
     }
@@ -72,7 +74,7 @@ public class InviteMessageAdapter extends BaseAdapter {
             vh = (ViewHolder) convertView.getTag();
         }
         //绑定数据
-        InvitationInfo invitationInfo = invitationInfos.get(position);
+        final InvitationInfo invitationInfo = invitationInfos.get(position);
         GroupInfo groupInfo = invitationInfo.getGroupInfo();
         if(groupInfo!=null){
             //群邀请
@@ -83,7 +85,6 @@ public class InviteMessageAdapter extends BaseAdapter {
             //隐藏button
             vh.btInviteAccept.setVisibility(View.GONE);
             vh.btInviteReject.setVisibility(View.GONE);
-            //新邀请
             //新邀请
             if (invitationInfo.getStatus()
                     == InvitationInfo.InvitationStatus.NEW_INVITE){
@@ -97,6 +98,24 @@ public class InviteMessageAdapter extends BaseAdapter {
                 }else{
                     vh.tvInviteReason.setText(invitationInfo.getReason());
                 }
+                //接受按钮监听
+                vh.btInviteAccept.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                        if(onInviteChangeListener!=null){
+                            onInviteChangeListener.onAccept(invitationInfo);
+                        }
+                    }
+                });
+                //拒绝按钮监听
+                vh.btInviteReject.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                        if(onInviteChangeListener!=null){
+                            onInviteChangeListener.onReject(invitationInfo);
+                        }
+                    }
+                });
             }else if(invitationInfo.getStatus() //邀请被接受
                     == InvitationInfo.InvitationStatus.INVITE_ACCEPT_BY_PEER){
                 if (invitationInfo.getReason() == null){
@@ -131,5 +150,27 @@ public class InviteMessageAdapter extends BaseAdapter {
         ViewHolder(View view) {
             ButterKnife.bind(this, view);
         }
+    }
+
+
+          /*
+    * 第一步  定义接口
+    * 第二步  定义接口的变量
+    * 第三步  设置set方法
+    * 第四步  接受接口的实例对象
+    * 第五步  调用接口方法
+    *
+    * */
+
+    private OnInviteChangeListener onInviteChangeListener;
+
+    public void setOnInviteChangeListener(OnInviteChangeListener onInviteChangeListener) {
+        this.onInviteChangeListener = onInviteChangeListener;
+    }
+
+
+    public interface OnInviteChangeListener{
+        void onAccept(InvitationInfo info); //同意
+        void onReject(InvitationInfo info);  //拒绝
     }
 }

@@ -131,14 +131,14 @@ public class InvitationDao {
                 //联系人
                 UserInfo userInfo = new UserInfo();
                 userInfo.setHxid(cursor.getString(cursor.getColumnIndex(InvitationTable.COL_USER_HXID)));
-                userInfo.setUsername(cursor.getString(cursor.getColumnIndex(InvitationTable.TABLE_NAME)));
+                userInfo.setUsername(cursor.getString(cursor.getColumnIndex(InvitationTable.COL_USER_NAME)));
                 invitationInfo.setUserInfo(userInfo);
             }else{
                 //群主
                 GroupInfo groupInfo = new GroupInfo();
                 groupInfo.setGroupid(cursor.getString(cursor.getColumnIndex(InvitationTable.COL_GROUP_ID)));
                 groupInfo.setGroupName(cursor.getString(cursor.getColumnIndex(InvitationTable.COL_GROUP_NAME)));
-                groupInfo.setInvitePerson(cursor.getString(cursor.getColumnIndex(InvitationTable.COL_USER_NAME)));
+                groupInfo.setInvitePerson(cursor.getString(cursor.getColumnIndex(InvitationTable.COL_USER_HXID)));
                 invitationInfo.setGroupInfo(groupInfo);
 
             }

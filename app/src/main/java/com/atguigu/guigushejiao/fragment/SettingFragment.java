@@ -62,6 +62,7 @@ public class SettingFragment extends Fragment {
                     @Override
                     public void onSuccess() {
                         //关闭数据库
+                        Modle.getInstance().exitLogin();
 
                         //跳转，结束
                         Intent intent = new Intent(getActivity(), LoginActivity.class);
