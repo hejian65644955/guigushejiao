@@ -110,7 +110,6 @@ public class LoginActivity extends AppCompatActivity {
             ShowToast.show(this,"账号和密码为空");
             return false;
         }
-
         return true;
     }
 }

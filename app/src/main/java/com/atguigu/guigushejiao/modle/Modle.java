@@ -40,15 +40,21 @@ public class Modle {
     }
 
     public void loginSuccess(String currentUser) {
+        if (currentUser == null){
+            return;
+        }
         if(dbManger!=null){
             dbManger.close();
         }
-
         dbManger = new DBManger(context,currentUser+".db");
 
     }
 
     public AccountDao getAccountDao() {
         return accountDao;
+    }
+
+    public DBManger getDbManger(){
+        return dbManger;
     }
 }

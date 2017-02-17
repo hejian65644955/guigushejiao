@@ -31,6 +31,7 @@ public class InvitationDao {
             return;
         }
         //获取连接
+
         SQLiteDatabase database = dbHelper.getReadableDatabase();
         ContentValues contentValues =new ContentValues();
         UserInfo userInfo = invitationInfo.getUserInfo();
@@ -44,9 +45,11 @@ public class InvitationDao {
             contentValues.put(InvitationTable.COL_USER_HXID,invitationInfo.getUserInfo().getHxid());
             contentValues.put(InvitationTable.COL_USER_NAME,invitationInfo.getUserInfo().getUsername());
         }
+
         contentValues.put(InvitationTable.COL_REASON,invitationInfo.getReason());
         contentValues.put(InvitationTable.COL_STATUS,invitationInfo.getStatus().ordinal());
         database.replace(InvitationTable.TABLE_NAME,null,contentValues);
+
     }
 
     // 将int类型状态转换为邀请的状态
