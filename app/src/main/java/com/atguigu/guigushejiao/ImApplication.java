@@ -1,5 +1,6 @@
 package com.atguigu.guigushejiao;
 
+
 import android.app.Application;
 import android.content.Context;
 
@@ -11,7 +12,7 @@ import com.hyphenate.easeui.controller.EaseUI;
  * Created by lenovo on 2017/2/14.
  */
 
-public class ImApplication extends Application{
+public class ImApplication extends Application {
     private static Context mContext;
 
     @Override
@@ -25,6 +26,7 @@ public class ImApplication extends Application{
         Modle.getInstance().init(this);
 
         mContext = this;
+
     }
 
     private void initHXSdk() {
@@ -35,12 +37,12 @@ public class ImApplication extends Application{
         //自动接受群邀请
         options.setAutoAcceptGroupInvitation(false);
         //初始化sdk
-        EaseUI.getInstance().init(this,options);
+        EaseUI.getInstance().init(this, options);
 
     }
 
     // 获取全局上下文对象
-    public static Context getGlobalApplication(){
+    public static Context getGlobalApplication() {
         return mContext;
     }
 }
