@@ -29,7 +29,7 @@ public class ContactDao {
         //获取连接
         SQLiteDatabase database = dbHelper.getReadableDatabase();
         //查询
-        String sql = "select * from" + ContactTable.TABLE_NAME
+        String sql = "select * from " + ContactTable.TABLE_NAME
                 + " where " + ContactTable.COL_IS_CONTACT + "=1";
         Cursor cursor = database.rawQuery(sql, null);
         List<UserInfo> userInfos = new ArrayList<>();
