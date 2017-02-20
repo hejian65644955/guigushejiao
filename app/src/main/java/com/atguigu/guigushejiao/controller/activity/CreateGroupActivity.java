@@ -9,7 +9,11 @@ import android.widget.CheckBox;
 import android.widget.EditText;
 
 import com.atguigu.guigushejiao.R;
+import com.atguigu.guigushejiao.modle.Modle;
 import com.atguigu.guigushejiao.utils.ShowToast;
+import com.hyphenate.chat.EMClient;
+import com.hyphenate.chat.EMGroupManager;
+import com.hyphenate.exceptions.HyphenateException;
 
 import butterknife.Bind;
 import butterknife.ButterKnife;
@@ -27,6 +31,8 @@ public class CreateGroupActivity extends AppCompatActivity {
     CheckBox cbNewgroupInvite;
     @Bind(R.id.bt_newgroup_create)
     Button btNewgroupCreate;
+    private String desc;
+    private String groupname;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -43,14 +49,61 @@ public class CreateGroupActivity extends AppCompatActivity {
 
             //跳转
             Intent intent = new Intent(CreateGroupActivity.this,PickContactActivity.class);
-            startActivity(intent);
+            startActivityForResult(intent,1);
         }
+    }
+
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+        if(requestCode==1){
+            createGroup(data);
+        }
+    }
+
+    private void createGroup(final Intent data) {
+        Modle.getInstance().getGlobalThread().execute(new Runnable() {
+            @Override
+            public void run() {
+                String[] members =data.getStringArrayExtra("members");
+                //去环信服务器创建群
+                EMGroupManager.EMGroupOptions option = new EMGroupManager.EMGroupOptions();
+                option.maxUsers=200;
+
+                if (cbNewgroupPublic.isChecked()){
+                    if (cbNewgroupInvite.isChecked()){
+                        option.style = EMGroupManager.EMGroupStyle.EMGroupStylePublicOpenJoin;
+                    }else{
+                        option.style = EMGroupManager.EMGroupStyle.EMGroupStylePublicJoinNeedApproval;
+                    }
+                }else{
+                    if (cbNewgroupInvite.isChecked()){
+
+                        option.style = EMGroupManager.EMGroupStyle.EMGroupStylePrivateMemberCanInvite;
+
+                    }else{
+
+                        option.style = EMGroupManager.EMGroupStyle.EMGroupStylePrivateOnlyOwnerInvite;
+                    }
+                }
+
+                try {
+                    EMClient.getInstance().groupManager().createGroup(groupname,desc,members,"",option);
+                    ShowToast.showUI(CreateGroupActivity.this,"创建群成功");
+                    finish();
+                } catch (HyphenateException e) {
+                    e.printStackTrace();
+                    ShowToast.showUI(CreateGroupActivity.this,"创建群失败"+e.getMessage());
+                }
+            }
+        });
+
     }
 
     private boolean validate() {
 
-        String desc = etNewgroupDesc.getText().toString().trim();
-        String groupname = etNewgroupName.getText().toString().trim();
+        desc = etNewgroupDesc.getText().toString().trim();
+        groupname = etNewgroupName.getText().toString().trim();
 
         if (TextUtils.isEmpty(groupname)){
             ShowToast.show(this,"群名称不能为空");
