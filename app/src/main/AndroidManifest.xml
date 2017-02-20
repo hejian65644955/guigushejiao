@@ -63,7 +63,11 @@
 
         <activity android:name=".controller.activity.LoginActivity" />
         <activity android:name=".controller.activity.AddContactActivity" />
-        <activity android:name=".controller.activity.InviteMessageActivity"></activity>
+        <activity android:name=".controller.activity.InviteMessageActivity" />
+        <activity android:name=".controller.activity.ChatActivity" />
+        <activity android:name=".controller.activity.GroupListActivity" />
+        <activity android:name=".controller.activity.CreateGroupActivity" />
+        <activity android:name=".controller.activity.PickContactActivity"></activity>
     </application>
 
 </manifest>
