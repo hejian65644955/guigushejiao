@@ -66,6 +66,14 @@ public class CreateGroupActivity extends AppCompatActivity {
             @Override
             public void run() {
                 String[] members =data.getStringArrayExtra("members");
+                if(members ==null){
+                    return;
+                }
+
+                if(members.length ==0){
+                    ShowToast.showUI(CreateGroupActivity.this,"没人还加啥？？？");
+                    return;
+                }
                 //去环信服务器创建群
                 EMGroupManager.EMGroupOptions option = new EMGroupManager.EMGroupOptions();
                 option.maxUsers=200;

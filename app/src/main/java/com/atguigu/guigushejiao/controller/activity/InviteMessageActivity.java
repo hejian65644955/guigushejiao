@@ -112,6 +112,137 @@ public class InviteMessageActivity extends AppCompatActivity {
                 }
             });
             }
+
+            @Override
+            public void onInviteAccept(final InvitationInfo info) {
+                Modle.getInstance().getGlobalThread().execute(new Runnable() {
+                    @Override
+                    public void run() {
+
+                        try {
+                            //网络
+                            EMClient.getInstance().groupManager()
+                                    .acceptInvitation(info.getGroupInfo().getGroupid(),
+                                            info.getGroupInfo().getInvitePerson());
+                            //本地
+                            info.setStatus(InvitationInfo.InvitationStatus.GROUP_ACCEPT_INVITE);
+                            Modle.getInstance().getDbManger().getInvitationDao()
+                                    .addInvitation(info);
+                            //内存和网页
+                            runOnUiThread(new Runnable() {
+                                @Override
+                                public void run() {
+                                    refresh();
+                                    ShowToast.show(InviteMessageActivity.this,"接受成功");
+                                }
+                            });
+                        } catch (HyphenateException e) {
+                            e.printStackTrace();
+                            ShowToast.showUI(InviteMessageActivity.this,"接受失败"+e.getMessage());
+                        }
+                    }
+                });
+            }
+
+            @Override
+            public void onInviteReject(final InvitationInfo info) {
+                Modle.getInstance().getGlobalThread().execute(new Runnable() {
+                    @Override
+                    public void run() {
+
+                        //网络
+                        try {
+                            EMClient.getInstance().groupManager()
+                                    .declineInvitation(
+                                            info.getGroupInfo().getGroupid(),
+                                            info.getGroupInfo().getInvitePerson(),"");
+
+                            //本地
+                            info.setStatus(InvitationInfo.InvitationStatus.GROUP_INVITE_DECLINED);
+                            Modle.getInstance().getDbManger().getInvitationDao()
+                                    .addInvitation(info);
+                            //内存和页面
+                            runOnUiThread(new Runnable() {
+                                @Override
+                                public void run() {
+                                    refresh();
+                                    ShowToast.show(InviteMessageActivity.this,"拒绝成功");
+                                }
+                            });
+                        } catch (HyphenateException e) {
+                            e.printStackTrace();
+                            ShowToast.showUI(InviteMessageActivity.this,"拒绝失败"+e.getMessage());
+                        }
+                    }
+                });
+
+            }
+
+            @Override
+            public void onApplicationAccept(final InvitationInfo info) {
+                //网络
+                Modle.getInstance().getGlobalThread().execute(new Runnable() {
+                    @Override
+                    public void run() {
+                        //网络
+                        try {
+                            EMClient.getInstance().groupManager()
+                                    .acceptApplication(info.getGroupInfo().getGroupName(),
+                                            info.getGroupInfo().getInvitePerson());
+
+                            //本地
+                            info.setStatus(InvitationInfo.InvitationStatus.GROUP_ACCEPT_APPLICATION);
+                            Modle.getInstance().getDbManger().getInvitationDao()
+                                    .addInvitation(info);
+                            //内存和网页
+                            runOnUiThread(new Runnable() {
+                                @Override
+                                public void run() {
+                                    refresh();
+                                    ShowToast.show(InviteMessageActivity.this,"接受成功");
+                                }
+                            });
+                        } catch (HyphenateException e) {
+                            e.printStackTrace();
+                            ShowToast.showUI(InviteMessageActivity.this,"接受失败"+e.getMessage());
+                        }
+                    }
+                });
+            }
+
+            @Override
+            public void onApplicationReject(final InvitationInfo info) {
+
+                Modle.getInstance().getGlobalThread().execute(new Runnable() {
+                    @Override
+                    public void run() {
+
+                        //网络
+                        try {
+                            EMClient.getInstance().groupManager()
+                                    .declineApplication(info.getGroupInfo().getGroupName(),
+                                            info.getGroupInfo().getInvitePerson(),"");
+
+                            //本地
+                            info.setStatus(InvitationInfo.InvitationStatus.GROUP_APPLICATION_DECLINED);
+                            Modle.getInstance().getDbManger().getInvitationDao()
+                                    .addInvitation(info);
+                            //内存和网页
+                            runOnUiThread(new Runnable() {
+                                @Override
+                                public void run() {
+                                    refresh();
+                                    ShowToast.show(InviteMessageActivity.this,"接受成功");
+                                }
+                            });
+                        } catch (HyphenateException e) {
+                            e.printStackTrace();
+                            ShowToast.showUI(InviteMessageActivity.this,"接受失败"+e.getMessage());
+                        }
+                    }
+                });
+
+            }
         });
         inviteMesLv.setAdapter(adapter);
 

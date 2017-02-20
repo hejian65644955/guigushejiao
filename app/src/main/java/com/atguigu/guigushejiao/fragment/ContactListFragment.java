@@ -63,6 +63,12 @@ public class ContactListFragment extends EaseContactListFragment {
         }
     };
     private List<UserInfo> contacts;
+    private BroadcastReceiver groupReceiver = new BroadcastReceiver() {
+        @Override
+        public void onReceive(Context context, Intent intent) {
+            isShow();
+        }
+    };
 
     private void isShow() {
         boolean isShow = SpUtils.getInstance().getBoolean(SpUtils.IS_NEW_INVITE, false);
@@ -87,6 +93,7 @@ public class ContactListFragment extends EaseContactListFragment {
         manager = LocalBroadcastManager.getInstance(getActivity());
         manager.registerReceiver(receiver,new IntentFilter(Constant.NEW_INVITE_CHANGE));
         manager.registerReceiver(contactreceiver,new IntentFilter(Constant.CONTACT_CHANGE));
+        manager.registerReceiver(groupReceiver,new IntentFilter(Constant.GROUP_INVITE_CHAGE));
 
 
 
@@ -203,12 +210,11 @@ public class ContactListFragment extends EaseContactListFragment {
         //从本地获取数据
         contacts = Modle.getInstance().getDbManger().getContactDao()
                 .getConatcts();
+
         //校验
         if(contacts ==null){
             return;
         }
-
-
         //转换数据
         Map<String,EaseUser> maps = new HashMap<>();
         for (UserInfo userInfo: contacts) {
@@ -253,6 +259,8 @@ public class ContactListFragment extends EaseContactListFragment {
         ButterKnife.unbind(this);
         //解除注册
         manager.unregisterReceiver(receiver);
+        manager.unregisterReceiver(contactreceiver);
+        manager.unregisterReceiver(groupReceiver);
 
     }
 
