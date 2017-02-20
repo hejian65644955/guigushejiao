@@ -75,6 +75,20 @@ public class PickAdapter extends BaseAdapter {
         return convertView;
     }
 
+    public List<String> getcontactCheck() {
+        if(pickInfos ==null){
+            return null;
+        }
+        List<String> userInfos = new ArrayList<>();
+        for(PickInfo pickInfo:pickInfos){
+            if(pickInfo.ischeck()){
+                userInfos.add(pickInfo.getUserInfo().getHxid());
+            }
+        }
+
+        return userInfos;
+    }
+
 
     class ViewHolder {
         @Bind(R.id.cb_item_pick_contacts)

@@ -1,5 +1,6 @@
 package com.atguigu.guigushejiao.controller.activity;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
 import android.view.View;
@@ -20,6 +21,7 @@ import java.util.List;
 
 import butterknife.Bind;
 import butterknife.ButterKnife;
+import butterknife.OnClick;
 
 public class PickContactActivity extends AppCompatActivity {
 
@@ -60,20 +62,20 @@ public class PickContactActivity extends AppCompatActivity {
     }
 
     private void initData() {
-    //获取联系人本地
+        //获取联系人本地
         List<UserInfo> conatcts = Modle.getInstance().getDbManger()
                 .getContactDao().getConatcts();
-        if(conatcts ==null){
+        if (conatcts == null) {
             return;
         }
-        if(conatcts.size()==0){
-            ShowToast.show(this,"您还没有好友");
+        if (conatcts.size() == 0) {
+            ShowToast.show(this, "您还没有好友");
         }
 
         //转化数据
         pickInfos = new ArrayList<>();
-        for(UserInfo userInfo :conatcts){
-            pickInfos.add(new PickInfo(userInfo,false));
+        for (UserInfo userInfo : conatcts) {
+            pickInfos.add(new PickInfo(userInfo, false));
         }
         pickAdapter.refresh(pickInfos);
 
@@ -83,6 +85,21 @@ public class PickContactActivity extends AppCompatActivity {
     private void initView() {
         pickAdapter = new PickAdapter(this);
         lvPick.setAdapter(pickAdapter);
+
+    }
+
+    //保存联系人
+    @OnClick(R.id.tv_pick_save)
+    public void onClick() {
+        List<String> contactCheck = pickAdapter.getcontactCheck();
+        if(contactCheck ==null){
+            return;
+        }
+        Intent intent = new Intent();
+        intent.putExtra("members",contactCheck.toArray(new String[contactCheck.size()]));
+        setResult(1,intent);
+        finish();
+
 
     }
 }
