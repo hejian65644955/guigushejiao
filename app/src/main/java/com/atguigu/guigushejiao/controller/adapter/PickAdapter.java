@@ -24,21 +24,24 @@ public class PickAdapter extends BaseAdapter {
 
     private final Context context;
     List<PickInfo> pickInfos;
+    private List<String> members;
 
     public PickAdapter(Context context) {
         this.context = context;
         pickInfos = new ArrayList<>();
+        members= new ArrayList<>();
     }
 
-    public void refresh(List<PickInfo> pickInfos) {
-        if (pickInfos == null) {
-            return;
+    public void refresh(List<PickInfo> pickInfos,List<String> members) {
+        if (pickInfos != null) {
+            this.pickInfos.clear();
+            this.pickInfos.addAll(pickInfos);
+            notifyDataSetChanged();
         }
-
-        this.pickInfos.clear();
-        this.pickInfos.addAll(pickInfos);
-        notifyDataSetChanged();
-
+        if(members !=null && members.size()>=0){
+            this.members.clear();
+            this.members.addAll(members);
+        }
     }
 
 
@@ -67,14 +70,12 @@ public class PickAdapter extends BaseAdapter {
         }else {
             viewHolder = (ViewHolder) convertView.getTag();
         }
-
         //初始化数据
         PickInfo pickInfo = pickInfos.get(position);
         viewHolder.cbItemPickContacts.setChecked(pickInfo.ischeck());
         viewHolder.tvItemPickContactsName.setText(pickInfo.getUserInfo().getUsername());
         return convertView;
     }
-
     public List<String> getcontactCheck() {
         if(pickInfos ==null){
             return null;
@@ -89,13 +90,11 @@ public class PickAdapter extends BaseAdapter {
         return userInfos;
     }
 
-
     class ViewHolder {
         @Bind(R.id.cb_item_pick_contacts)
         CheckBox cbItemPickContacts;
         @Bind(R.id.tv_item_pick_contacts_name)
         TextView tvItemPickContactsName;
-
         ViewHolder(View view) {
             ButterKnife.bind(this, view);
         }

@@ -16,6 +16,8 @@ import com.atguigu.guigushejiao.modle.Modle;
 import com.atguigu.guigushejiao.modle.bean.PickInfo;
 import com.atguigu.guigushejiao.modle.bean.UserInfo;
 import com.atguigu.guigushejiao.utils.ShowToast;
+import com.hyphenate.chat.EMClient;
+import com.hyphenate.chat.EMGroup;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -32,6 +34,8 @@ public class PickContactActivity extends AppCompatActivity {
     ListView lvPick;
     private PickAdapter pickAdapter;
     private List<PickInfo> pickInfos;
+    private List<String> members;
+    private boolean isMembers = false;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -44,6 +48,22 @@ public class PickContactActivity extends AppCompatActivity {
         initData();
 
         initListener();
+
+        getGroupId();
+    }
+
+    private void getGroupId() {
+        String groupid = getIntent().getStringExtra("groupid");
+        if(groupid==null){
+            //创建群
+            members = new ArrayList<>();
+            isMembers =false;
+        }else {
+            isMembers =true;
+            //添加群成员
+            EMGroup group = EMClient.getInstance().groupManager().getGroup(groupid);
+            members = group.getMembers();
+        }
     }
 
     private void initListener() {
@@ -57,7 +77,7 @@ public class PickContactActivity extends AppCompatActivity {
                 cbPick.setChecked(!cbPick.isChecked());
                 PickInfo pickInfo = pickInfos.get(position);
                 pickInfo.setIscheck(cbPick.isChecked());
-                pickAdapter.refresh(pickInfos);
+                pickAdapter.refresh(pickInfos,members);
             }
         });
     }
@@ -78,7 +98,7 @@ public class PickContactActivity extends AppCompatActivity {
         for (UserInfo userInfo : conatcts) {
             pickInfos.add(new PickInfo(userInfo, false));
         }
-        pickAdapter.refresh(pickInfos);
+        pickAdapter.refresh(pickInfos,members);
 
 
     }
@@ -98,7 +118,11 @@ public class PickContactActivity extends AppCompatActivity {
         }
         Intent intent = new Intent();
         intent.putExtra("members",contactCheck.toArray(new String[contactCheck.size()]));
-        setResult(1,intent);
+        if (isMembers){
+            setResult(2,intent);
+        }else{
+            setResult(1,intent);
+        }
         finish();
     }
     @Override

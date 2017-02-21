@@ -66,7 +66,6 @@ public class ChatDetailsActivity extends AppCompatActivity {
                         //是删除模式下管用
                         if(modle){
                             adapter.setDeleteModle(false);
-
                         }
                         break;
                 }
@@ -90,8 +89,7 @@ public class ChatDetailsActivity extends AppCompatActivity {
                     //转类型
                     final List<UserInfo> userinfos = new ArrayList<UserInfo>();
 
-                    for (String hxid : members
-                            ) {
+                    for (String hxid : members) {
                         userinfos.add(new UserInfo(hxid));
                     }
 
@@ -185,12 +183,32 @@ public class ChatDetailsActivity extends AppCompatActivity {
         adapter = new GroupDetailAdapter(this, isModify,new GroupDetailAdapter.onMembersChangeListener(){
 
             @Override
-            public void onRemoveGroupMember(UserInfo userInfo) {
-                ShowToast.show(ChatDetailsActivity.this,"删除成功");
+            public void onRemoveGroupMember(final UserInfo userInfo) {
+                //ShowToast.show(ChatDetailsActivity.this,"删除成功");
+                Modle.getInstance().getGlobalThread().execute(new Runnable() {
+                    @Override
+                    public void run() {
+                        //网络删除成员
+                        try {
+                            EMClient.getInstance().groupManager().
+                                    removeUserFromGroup(group.getGroupId(),userInfo.getHxid());
+                            ShowToast.showUI(ChatDetailsActivity.this,"删除成功");
+                        } catch (HyphenateException e) {
+                            ShowToast.showUI(ChatDetailsActivity.this,"删除失败");
+                            e.printStackTrace();
+                        }
+                    }
+                });
+
+
             }
             @Override
             public void onAddGroupMember(UserInfo userInfo) {
                 ShowToast.show(ChatDetailsActivity.this,"添加成功");
+                //跳转到选择好友界面
+                Intent intent = new Intent(ChatDetailsActivity.this, PickContactActivity.class);
+                intent.putExtra("groupid",group.getGroupId());
+                startActivityForResult(intent,2);
             }
         });
         gvGroupDetail.setAdapter(adapter);
@@ -205,5 +223,34 @@ public class ChatDetailsActivity extends AppCompatActivity {
         manager.sendBroadcast(intent);
 
 
+    }
+
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+        if(requestCode ==2){
+            addMembers(data);
+        }
+    }
+
+    private void addMembers(Intent data) {
+        final String[] memberses = data.getStringArrayExtra("members");
+        if(memberses==null && memberses.length>=0){
+            return;
+        }
+
+        Modle.getInstance().getGlobalThread().execute(new Runnable() {
+            @Override
+            public void run() {
+                try {
+                    EMClient.getInstance().groupManager().
+                            addUsersToGroup(group.getGroupId(),memberses);
+                    ShowToast.showUI(ChatDetailsActivity.this,"添加群成员成功");
+                } catch (HyphenateException e) {
+                    ShowToast.showUI(ChatDetailsActivity.this,"添加群成员失败");
+                    e.printStackTrace();
+                }
+            }
+        });
     }
 }

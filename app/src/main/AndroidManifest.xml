@@ -37,7 +37,8 @@
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
-        <activity android:name=".MainActivity" />
+        <activity android:name=".MainActivity"
+            android:windowSoftInputMode="adjustUnspecified|stateHidden"/>
 
         <!-- 设置环信应用的appkey -->
         <meta-data
@@ -60,6 +61,7 @@
                 <action android:name="android.intent.action.USER_PRESENT" />
             </intent-filter>
         </receiver>
+
 
         <activity android:name=".controller.activity.LoginActivity" />
         <activity android:name=".controller.activity.AddContactActivity" />

@@ -158,8 +158,19 @@ public class ContactListFragment extends EaseContactListFragment {
                     //删除邀请信息
                     Modle.getInstance().getDbManger().getInvitationDao()
                             .removeInvitation(userInfo.getHxid());
-                    //刷新
-                    refreshContact();
+
+                    if(getActivity()==null){
+                        return;
+                    }
+
+                    getActivity().runOnUiThread(new Runnable() {
+                        @Override
+                        public void run() {
+                            //刷新
+                            refreshContact();
+                        }
+                    });
+
 
                     ShowToast.showUI(getActivity(),"删除成功");
                 } catch (HyphenateException e) {
@@ -190,8 +201,11 @@ public class ContactListFragment extends EaseContactListFragment {
                     Modle.getInstance().getDbManger().
                             getContactDao().saveContacts(userInfos,true);
 
-
+                    if(getActivity()==null){
+                        return;
+                    }
                     getActivity().runOnUiThread(new Runnable() {
+
                         @Override
                         public void run() {
                             //内存和网页
