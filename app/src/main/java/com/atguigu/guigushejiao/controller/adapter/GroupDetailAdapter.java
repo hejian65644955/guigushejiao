@@ -26,7 +26,8 @@ public class GroupDetailAdapter extends BaseAdapter {
     private List<UserInfo> userInfos;
     private boolean isDeleteModle = false;
 
-    public GroupDetailAdapter(Context context, boolean isModify) {
+    public GroupDetailAdapter(Context context, boolean isModify,onMembersChangeListener onMembersChangeListener) {
+        this.onMembersChangeListener = onMembersChangeListener;
         this.context = context;
         this.isModify = isModify;
         userInfos = new ArrayList<>();
@@ -67,7 +68,7 @@ public class GroupDetailAdapter extends BaseAdapter {
     }
 
     @Override
-    public View getView(int position, View convertView, ViewGroup parent) {
+    public View getView(final int position, View convertView, ViewGroup parent) {
         ViewHolder viewHolder = null;
         if (convertView == null) {
             convertView = View.inflate(context, R.layout.adapter_group_member, null);
@@ -127,6 +128,9 @@ public class GroupDetailAdapter extends BaseAdapter {
                 viewHolder.ivMemberPhoto.setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View v) {
+                        if(onMembersChangeListener!=null){
+                            onMembersChangeListener.onAddGroupMember(userInfos.get(position));
+                        }
 
                     }
                 });
@@ -134,6 +138,9 @@ public class GroupDetailAdapter extends BaseAdapter {
                 viewHolder.ivMemberPhoto.setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View v) {
+                        if(onMembersChangeListener!=null){
+                            onMembersChangeListener.onRemoveGroupMember(userInfos.get(position));
+                        }
 
                     }
                 });
@@ -168,5 +175,11 @@ public class GroupDetailAdapter extends BaseAdapter {
         ViewHolder(View view) {
             ButterKnife.bind(this, view);
         }
+    }
+
+    private onMembersChangeListener onMembersChangeListener;
+    public interface onMembersChangeListener{
+        void onRemoveGroupMember(UserInfo userInfo);
+        void onAddGroupMember(UserInfo userInfo);
     }
 }

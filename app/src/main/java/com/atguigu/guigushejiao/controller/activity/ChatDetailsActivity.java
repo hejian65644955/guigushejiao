@@ -50,7 +50,6 @@ public class ChatDetailsActivity extends AppCompatActivity {
         //获取群成员
         getGroupMembers();
     }
-
     private void getGroupMembers() {
         Modle.getInstance().getGlobalThread().execute(new Runnable() {
             @Override
@@ -153,13 +152,22 @@ public class ChatDetailsActivity extends AppCompatActivity {
                             }
                         }
                     });
-
                 }
             });
         }
         //判断是否有邀请的权限
         boolean isModify = EMClient.getInstance().getCurrentUser().equals(owner) || group.isPublic();
-        adapter = new GroupDetailAdapter(this, isModify);
+        adapter = new GroupDetailAdapter(this, isModify,new GroupDetailAdapter.onMembersChangeListener(){
+
+            @Override
+            public void onRemoveGroupMember(UserInfo userInfo) {
+                ShowToast.show(ChatDetailsActivity.this,"删除成功");
+            }
+            @Override
+            public void onAddGroupMember(UserInfo userInfo) {
+                ShowToast.show(ChatDetailsActivity.this,"添加成功");
+            }
+        });
         gvGroupDetail.setAdapter(adapter);
     }
 
