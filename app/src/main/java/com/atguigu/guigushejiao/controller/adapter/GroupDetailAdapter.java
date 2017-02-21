@@ -26,7 +26,16 @@ public class GroupDetailAdapter extends BaseAdapter {
     private List<UserInfo> userInfos;
     private boolean isDeleteModle = false;
 
-    public GroupDetailAdapter(Context context, boolean isModify,onMembersChangeListener onMembersChangeListener) {
+    public boolean getDeleteModle() {
+        return isDeleteModle;
+    }
+
+    public void setDeleteModle(boolean deleteModle) {
+        isDeleteModle = deleteModle;
+        notifyDataSetChanged();
+    }
+
+    public GroupDetailAdapter(Context context, boolean isModify, onMembersChangeListener onMembersChangeListener) {
         this.onMembersChangeListener = onMembersChangeListener;
         this.context = context;
         this.isModify = isModify;
