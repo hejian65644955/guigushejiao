@@ -73,7 +73,7 @@ public class ContactListFragment extends EaseContactListFragment {
     private void isShow() {
         boolean isShow = SpUtils.getInstance().getBoolean(SpUtils.IS_NEW_INVITE, false);
         contanctIvInvite.setVisibility(isShow?View.VISIBLE:View.GONE);
-
+        
     }
 
     @Override
@@ -195,6 +195,7 @@ public class ContactListFragment extends EaseContactListFragment {
                         @Override
                         public void run() {
                             //内存和网页
+
                             refreshContact();
                         }
                     });
@@ -276,11 +277,9 @@ public class ContactListFragment extends EaseContactListFragment {
                 startActivity(intent);
                 break;
             case R.id.ll_groups:
-
                 //跳转到群列表
                 Intent groupIntent = new Intent(getActivity(),GroupListActivity.class);
                 startActivity(groupIntent);
-
                 break;
         }
     }

@@ -45,63 +45,66 @@ public class CreateGroupActivity extends AppCompatActivity {
     @OnClick(R.id.bt_newgroup_create)
     public void onClick() {
 
-        if (validate()){
+        if (validate()) {
 
             //跳转
-            Intent intent = new Intent(CreateGroupActivity.this,PickContactActivity.class);
-            startActivityForResult(intent,1);
+            Intent intent = new Intent(CreateGroupActivity.this, PickContactActivity.class);
+            startActivityForResult(intent, 1);
         }
     }
 
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
-        if(requestCode==1){
+        if (requestCode == 1) {
             createGroup(data);
         }
     }
 
     private void createGroup(final Intent data) {
+        if (data == null) {
+            return;
+        }
         Modle.getInstance().getGlobalThread().execute(new Runnable() {
             @Override
             public void run() {
-                String[] members =data.getStringArrayExtra("members");
-                if(members ==null){
+                String[] members = data.getStringArrayExtra("members");
+                if (members == null) {
                     return;
                 }
 
-                if(members.length ==0){
-                    ShowToast.showUI(CreateGroupActivity.this,"没人还加啥？？？");
+                if (members.length == 0) {
+                    ShowToast.showUI(CreateGroupActivity.this, "没人还加啥？？？");
                     return;
                 }
                 //去环信服务器创建群
                 EMGroupManager.EMGroupOptions option = new EMGroupManager.EMGroupOptions();
-                option.maxUsers=200;
+                option.maxUsers = 200;
 
-                if (cbNewgroupPublic.isChecked()){
-                    if (cbNewgroupInvite.isChecked()){
+                if (cbNewgroupPublic.isChecked()) {
+                    if (cbNewgroupInvite.isChecked()) {
                         option.style = EMGroupManager.EMGroupStyle.EMGroupStylePublicOpenJoin;
-                    }else{
+                    } else {
                         option.style = EMGroupManager.EMGroupStyle.EMGroupStylePublicJoinNeedApproval;
                     }
-                }else{
-                    if (cbNewgroupInvite.isChecked()){
+                } else {
+                    if (cbNewgroupInvite.isChecked()) {
 
                         option.style = EMGroupManager.EMGroupStyle.EMGroupStylePrivateMemberCanInvite;
 
-                    }else{
+                    } else {
 
                         option.style = EMGroupManager.EMGroupStyle.EMGroupStylePrivateOnlyOwnerInvite;
                     }
                 }
 
                 try {
-                    EMClient.getInstance().groupManager().createGroup(groupname,desc,members,"",option);
-                    ShowToast.showUI(CreateGroupActivity.this,"创建群成功");
+                    EMClient.getInstance().groupManager().createGroup(groupname, desc, members, "", option);
+                    ShowToast.showUI(CreateGroupActivity.this, "创建群成功");
                     finish();
                 } catch (HyphenateException e) {
                     e.printStackTrace();
-                    ShowToast.showUI(CreateGroupActivity.this,"创建群失败"+e.getMessage());
+                    ShowToast.showUI(CreateGroupActivity.this, "创建群失败" + e.getMessage());
                 }
             }
         });
@@ -109,16 +112,15 @@ public class CreateGroupActivity extends AppCompatActivity {
     }
 
     private boolean validate() {
-
         desc = etNewgroupDesc.getText().toString().trim();
         groupname = etNewgroupName.getText().toString().trim();
 
-        if (TextUtils.isEmpty(groupname)){
-            ShowToast.show(this,"群名称不能为空");
+        if (TextUtils.isEmpty(groupname)) {
+            ShowToast.show(this, "群名称不能为空");
             return false;
         }
-        if (TextUtils.isEmpty(desc)){
-            ShowToast.show(this,"群简介不能为空");
+        if (TextUtils.isEmpty(desc)) {
+            ShowToast.show(this, "群简介不能为空");
             return false;
         }
         return true;
